@@ -25,7 +25,7 @@ def rgb(n = 0):
 
 # Get display coordinates from angle in radians
 def pixel(angle):
-	return int(round(3.5 + 3.5 * math.sin(angle)))
+	return max(0, min(7, int(4 + 4 * math.sin(angle))))
 
 # Factor used in angular speed step,
 # also used for sleep in seconds
