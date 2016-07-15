@@ -22,7 +22,7 @@ while True:
 			sys.exit()
 
 		# Column headers on new log file
-		if !os.path.isfile(log):
+		if not os.path.isfile(log):
 			with open(log, "w") as file:
 				file.write("Date,Time,CPU,Temp,Press,Light,Red,Green,Blue\n")
 
