@@ -22,6 +22,7 @@ while True:
 		if not os.path.isfile(log):
 			with open(log, "w") as file:
 				file.write("Date,Time,CPU,Temp,Press,Light,Red,Green,Blue,Heading,AccelX,AccelY,AccelZ\n")
+			os.chown(log, 1000, 1000)
 
 		old = log
 
@@ -31,14 +32,14 @@ while True:
 
 	# EnviroPhat measurements
 	temperature = weather.temperature()
-	pressure    = weather.pressure()
+	pressure    = float(weather.pressure()) / 100
 	lightflux   = light.light()
 	r, g, b     = light.rgb()
 	heading     = motion.heading()
 	ax, ay, az  = motion.accelerometer()
 
 	# Comma Separated Values
-	csv = "{n:%F,%T},{c:.1f},{t:.1f},{p:.0f},{f},{r},{g},{b},{h:.0f},{x:.1f},{y:.1f},{z:.1f}\n".format(
+	csv = "{n:%F,%T},{c:.1f},{t:.1f},{p:.1f},{f},{r},{g},{b},{h:.0f},{x:.1f},{y:.1f},{z:.1f}\n".format(
 		n = now,
 		c = cputemp,
 		t = temperature,
