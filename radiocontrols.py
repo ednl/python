@@ -1,23 +1,28 @@
 #!/usr/bin/env python3
 
-##### Imports ###############
+##### Imports #################################################################
+
+# Also requires external programs/scripts: mpc, piradio, station, snooze
+# See https://github.com/ednl/piradio
 
 from dothat import touch, lcd, backlight
 import re, signal, time, subprocess, threading
 
-##### Globals ###############
+##### Globals #################################################################
 
 # To extract numbers from "mpc volume" command output
 findnum = re.compile(r"\d+")
 
-# Read station IDs
+# Read station IDs from plain text file with no empty lines,
+# every line structured as: <unique-station-ID><whitespace><stream-URL>
+# Same file as used by external "piradio" and "station" scripts
 index = 0
 stations = []
 with open("/home/pi/radio.txt") as file:
 	for line in file:
 		stations.append(line.split()[0])
 
-##### Functions ###############
+##### Functions ###############################################################
 
 # Write to LCD
 def line(row, txt):
@@ -47,13 +52,13 @@ def show():
 	line(1, volume)
 	line(2, "Snooze: " + snooze)
 
-	# Turn on LED graph, set timer to turn off
+	# Turn on LED graph, set timer to turn it off
 	percent = float(findnum.search(volume).group()) / 100
 	backlight.set_graph(percent)
 	t2 = threading.Timer(1.5, leds_off)
 	t2.start()
 
-	# Update station index (set on first run)
+	# Update station index
 	try:
 		index = stations.index(station)
 	except ValueError:
@@ -65,7 +70,7 @@ def tune():
 		subprocess.call("piradio " + stations[index], shell=True)
 	show()
 
-##### Hooks ###############
+##### Hooks ###################################################################
 
 # Volume up
 @touch.on(touch.UP)
@@ -82,10 +87,12 @@ def press_down(channel, event):
 # Radio off
 @touch.on(touch.CANCEL)
 def press_cancel(channel, event):
+	backlight.rgb(255, 255, 255)
+	t = threading.Timer(2.0, backlight.off)
+	t.start()
 	subprocess.call("piradio off", shell=True)
-	backlight.set_graph(0)
-	backlight.off()
 	lcd.clear()
+	backlight.set_graph(0)
 
 # Radio on
 @touch.on(touch.BUTTON)
@@ -110,7 +117,7 @@ def press_right(channel, event):
 		index = 0
 	tune()
 
-##### Main ###############
+##### Main ####################################################################
 
 # Initial update
 show()
