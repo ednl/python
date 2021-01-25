@@ -8,23 +8,23 @@ random.seed()
 
 viswanath = 1.131_988_248_794_3
 
-n = decade = 0
-p = q = mod = 1
+n = div = 0
+fib1 = fib2 = mod = 1
 while (n < 1_000_000):
-    tmp = p
+    tmp = fib1
     if random.randint(0, 1):
-        p += q
+        fib1 += fib2
     else:
-        p -= q
-    q = tmp
+        fib1 -= fib2
+    fib2 = tmp
     n += 1
     if n % mod == 0:
-        if p:
-            root = math.exp(math.log(abs(p)) / n)
+        if fib1:
+            root = math.exp(math.log(abs(fib1)) / n)
             print(n, root, abs(root - viswanath))
         else:
-            print(n, p)
-        decade += 1
-        if decade == 9:
+            print(n, 0)
+        div += 1
+        if div == 9:
             mod *= 10
-            decade = 0
+            div = 0
