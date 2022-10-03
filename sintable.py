@@ -45,7 +45,7 @@ sintable = [round(sin(index2rad(i)), 5) for i in range(quad1 + 1)]
 # Argument 'a' can be any integer but needs to be normalised, so this is slow for very
 # big (positive or negative) values. It depends on the CPU and language implementation
 # whether "mod" is faster than repeated adding/subtracting. On modern architectures,
-# mod is definitely faster, but on the Apple IIe? I have no idea :)
+# mod is definitely faster, but on the Apple II+? I have no idea :)
 def sinlookup(a):
     # Normalise 'a' to the range 0..circle inclusive
     while a < 0:
