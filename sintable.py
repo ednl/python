@@ -3,7 +3,7 @@
 # https://twitter.com/ednl
 # https://github.com/ednl
 
-# Only for lookup table generation and validation
+# Only needed for lookup table generation and validation
 from math import sin, cos, tau
 
 # Quadrants and circle below are not in degrees but in "index units" as defined by the step
@@ -30,6 +30,10 @@ def index2rad(a):
 # In real code, this could (should) be a list of literal values
 # Use the minimum amount of decimals necessary, choice here: 5
 sintable = [round(sin(index2rad(i)), 5) for i in range(quad1 + 1)]
+# Another possibility would be to make these values integers by multiplying them
+# by the number of decimals needed, while making sure that the maximum value (1 * 10^dec)
+# stays within the standard integer range of your platform (e.g. 32767). But then the
+# code using these values would have to be modified to take this scaling into account.
 
 # Give sine of argument 'a' given in "index units" by using lookup table
 # Argument 'a' is in stepped degrees where in this example the step is 3, so:
