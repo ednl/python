@@ -30,7 +30,7 @@ def index2rad(a):
 # Use the minimum amount of decimals necessary, choice here: 5
 sintable = [round(sin(index2rad(i)), 5) for i in range(quad1 + 1)]
 
-# Give sine of argument a given in "index units" by using lookup table
+# Give sine of argument 'a' given in "index units" by using lookup table
 # Argument 'a' is in stepped degrees where in this example the step is 3, so:
 #   a = -1 => -3 degrees
 #   a =  0 =>  0 degrees
@@ -42,21 +42,21 @@ sintable = [round(sin(index2rad(i)), 5) for i in range(quad1 + 1)]
 # whether "mod" is faster than repeated adding/subtracting. On modern architectures,
 # mod is definitely faster, but on the Apple IIe? I have no idea :)
 def sinlookup(a):
-    # Normalise a to the range 0..circle inclusive
+    # Normalise 'a' to the range 0..circle inclusive
     while a < 0:
         a += circle
     while a > circle:
         a -= circle
-    # Value of a is now in the range 0..360 degrees inclusive
+    # Value of 'a' is now in the range 0..360 degrees inclusive
     # Map each quadrant onto the first quadrant which is in the lookup table
     # Each time, "greater than" is good because the lookup table includes 90 degrees
     if a > quad3:
-        return -sintable[circle - a]
+        return -sintable[circle - a]   # double mirror
     if a > quad2:
-        return -sintable[a - quad2]
+        return -sintable[a - quad2]    # shift and mirror
     if a > quad1:
-        return sintable[quad2 - a]
-    return sintable[a]
+        return sintable[quad2 - a]     # mirror
+    return sintable[a]                 # direct value
 
 # Same for cosine
 def coslookup(a):
@@ -65,12 +65,12 @@ def coslookup(a):
     while a > circle:
         a -= circle
     if a > quad3:
-        return sintable[a - quad3]
+        return sintable[a - quad3]     # shift
     if a > quad2:
-        return -sintable[quad3 - a]
+        return -sintable[quad3 - a]    # double mirror
     if a > quad1:
-        return -sintable[a - quad1]
-    return sintable[quad1 - a]
+        return -sintable[a - quad1]    # shift and mirror
+    return sintable[quad1 - a]         # mirror
 
 # Test for a wide range of "index units"
 # and display difference between lookup value and calculation
