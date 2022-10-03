@@ -3,6 +3,7 @@
 # https://twitter.com/ednl
 # https://github.com/ednl
 
+# Only for lookup table generation and validation
 from math import sin, cos, tau
 
 # Quadrants and circle below are not in degrees but in "index units" as defined by the step
@@ -37,8 +38,8 @@ sintable = [round(sin(index2rad(i)), 5) for i in range(quad1 + 1)]
 #   a =  1 =>  3 degrees
 #   a = 30 => 90 degrees
 #   a = 31 => 93 degrees
-# Argument a can be any integer but needs to be normalised, so this is slow for very big
-# (positive or negative) values. It depends on the CPU and language implementation
+# Argument 'a' can be any integer but needs to be normalised, so this is slow for very
+# big (positive or negative) values. It depends on the CPU and language implementation
 # whether "mod" is faster than repeated adding/subtracting. On modern architectures,
 # mod is definitely faster, but on the Apple IIe? I have no idea :)
 def sinlookup(a):
