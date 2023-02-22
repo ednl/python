@@ -1,2 +1,2 @@
 # python
-Python scripts for Raspberry Pi
+Python scripts for this and that.
