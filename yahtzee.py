@@ -1,14 +1,16 @@
 from math import sqrt
 import numpy as np
 from secrets import randbits
+
+# Seed random number generator
 rng = np.random.default_rng(randbits(128))
 
 # Simulation parameters (constants)
 DICE  = 5
-MAJOR = (DICE + 1) // 2
+MAJOR = (DICE + 1) // 2  # at least half of all dice
 SIDES = 6
 BATCH = 10000
-ERROR = 0.005
+ERROR = 0.02  # should be 0.005 for 2 significant decimals but that takes way too long
 
 # Simulation progress variables
 games = 0  # simulation counter
@@ -21,7 +23,9 @@ mean = 0    # running mean
 m2var = 0   # unscaled variance
 stddev = 1  # standard deviation (init value >ERROR)
 
+# Run simulation until standard deviation is small enough
 while stddev >= ERROR:
+    # A single game doesn't change stddev much, repeat many to save sqrt calculations
     for _ in range(BATCH):
         games += 1
 
@@ -52,15 +56,19 @@ while stddev >= ERROR:
                 # Majority reached, so die value locked in
                 high = bins[pips]
 
-        sum += throws
         in3 += 1 if throws < 4 else 0
+        # current estimate of the requested value
+        sum += throws
         estm = sum / games
+        # Update running mean and unscaled variance
         delta = estm - mean
         mean += delta / games
         m2var += delta * (estm - mean)
 
+    # Scale as population variance (= exact variance of given data)
+    # and take square root for new standard deviation
     stddev = sqrt(m2var / games)
-    print(stddev)
+    print(f'{stddev:.5f}')  # progress indicator
 
-print(f'Yahtzee takes {mean:.2f} throws on average in {games}.')
+print(f'"Yahtzee" takes {mean:.2f} throws on average in {games} games.')
 print(f'At most three throws in {in3 / games * 100:.2f} percent of games.')
